@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "auto-push": "./scripts/auto-push.sh",
+    "deploy": "npm run build && npm run auto-push"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
