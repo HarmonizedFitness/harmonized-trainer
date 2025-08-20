@@ -1,7 +1,7 @@
 // app/api/clients/route.ts
 import { NextResponse } from "next/server";
-import { createSupabaseServer } from "@/lib/supabaseServer";
-import { requireTrainerOrRedirect } from "@/lib/authz";
+import { createSupabaseServer } from "@/src/lib/supabaseServer";
+import { requireTrainerOrRedirect } from "@/src/lib/authz";
 
 // GET /api/clients  -> list my clients
 export async function GET() {

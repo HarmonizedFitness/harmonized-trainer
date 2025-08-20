@@ -2,7 +2,7 @@
 import { createSupabaseServer } from "./supabaseServer";
 
 export async function getCurrentTrainer() {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
 
   const { data: { user }, error: userErr } = await supabase.auth.getUser();
   if (userErr || !user) return { user: null, trainer: null };

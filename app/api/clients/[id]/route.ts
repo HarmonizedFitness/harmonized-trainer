@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServer } from '@/lib/supabaseServer';
+import { NextResponse } from 'next/server';
+import { createSupabaseServer } from '@/src/lib/supabaseServer';
 
 // GET /api/clients/[id] - Get a specific client
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = createSupabaseServer();
+    const supabase = await createSupabaseServer();
     
     // Get the current session
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -16,6 +16,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const resolvedParams = await params;
     // Get client with credits and workouts (RLS will enforce access)
     const { data: client, error: clientError } = await supabase
       .from('clients')
@@ -42,7 +43,7 @@ export async function GET(
           notes
         )
       `)
-      .eq('id', params.id)
+      .eq('id', resolvedParams.id)
       .single();
 
     if (clientError) {
@@ -61,11 +62,11 @@ export async function GET(
 
 // PUT /api/clients/[id] - Update a client
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = createSupabaseServer();
+    const supabase = await createSupabaseServer();
     
     // Get the current session
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -77,6 +78,7 @@ export async function PUT(
     const body = await request.json();
     const { name, email, phone, date_of_birth, height_cm, weight_kg, goals, notes, is_active } = body;
 
+    const resolvedParams = await params;
     // Update client (RLS will enforce access)
     const { data: client, error: clientError } = await supabase
       .from('clients')
@@ -91,7 +93,7 @@ export async function PUT(
         notes,
         is_active
       })
-      .eq('id', params.id)
+      .eq('id', resolvedParams.id)
       .select()
       .single();
 
@@ -111,11 +113,11 @@ export async function PUT(
 
 // DELETE /api/clients/[id] - Delete a client
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = createSupabaseServer();
+    const supabase = await createSupabaseServer();
     
     // Get the current session
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -124,11 +126,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const resolvedParams = await params;
     // Delete client (RLS will enforce access)
     const { error: clientError } = await supabase
       .from('clients')
       .delete()
-      .eq('id', params.id);
+      .eq('id', resolvedParams.id);
 
     if (clientError) {
       return NextResponse.json({ error: 'Failed to delete client' }, { status: 500 });

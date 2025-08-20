@@ -1,7 +1,7 @@
-import { requireTrainerOrRedirect } from "@/lib/authz";
+import { requireTrainerOrRedirect } from "@/src/lib/authz";
 
 export default async function DashboardPage() {
-	const user = await requireTrainerOrRedirect();
+	const { user } = await requireTrainerOrRedirect();
 
 	return (
 		<main className="min-h-screen bg-neutral-950 text-neutral-100">

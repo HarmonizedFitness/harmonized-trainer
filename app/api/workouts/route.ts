@@ -1,7 +1,7 @@
 // app/api/workouts/route.ts
 import { NextResponse } from "next/server";
-import { createSupabaseServer } from "@/lib/supabaseServer";
-import { requireTrainerOrRedirect } from "@/lib/authz";
+import { createSupabaseServer } from "@/src/lib/supabaseServer";
+import { requireTrainerOrRedirect } from "@/src/lib/authz";
 
 // POST /api/workouts
 // { client_id, performed_at?, notes?, sets: [{ exercise_id, reps?, weight?, rir?, duration_seconds?, side? }] }

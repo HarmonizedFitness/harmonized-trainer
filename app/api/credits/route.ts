@@ -1,7 +1,7 @@
 // app/api/credits/route.ts
 import { NextResponse } from "next/server";
-import { createSupabaseServer } from "@/lib/supabaseServer";
-import { requireTrainerOrRedirect } from "@/lib/authz";
+import { createSupabaseServer } from "@/src/lib/supabaseServer";
+import { requireTrainerOrRedirect } from "@/src/lib/authz";
 
 // POST /api/credits  -> { client_id, delta } add/subtract credits
 export async function POST(req: Request) {
