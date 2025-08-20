@@ -2,15 +2,17 @@
 import { createSupabaseServer } from "./supabaseServer";
 
 export async function getCurrentTrainer() {
-  const supabase = await createSupabaseServer();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { user: null, trainer: null };
-  
-  const { data: trainer } = await supabase
+  const supabase = createSupabaseServer();
+
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  if (userErr || !user) return { user: null, trainer: null };
+
+  const { data: trainer, error } = await supabase
     .from("trainers")
-    .select("*")
+    .select("id, user_id, name, email")
     .eq("user_id", user.id)
     .maybeSingle();
-  
+
+  if (error) return { user, trainer: null };
   return { user, trainer };
 }
