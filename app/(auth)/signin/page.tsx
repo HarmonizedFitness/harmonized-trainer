@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/src/lib/supabase";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -16,6 +16,8 @@ export default function SignInPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoad(false);
     if (error) return setErr(error.message);
+    // Use refresh to ensure the server-side session is updated
+    router.refresh();
     router.push("/dashboard");
   };
 
