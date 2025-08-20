@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createSupabaseServer } from "@/lib/supabaseServer";
-import { getCurrentTrainer } from "@/lib/trainer";
+import { createSupabaseServer } from "@/src/lib/supabaseServer";
+import { getCurrentTrainer } from "@/src/lib/trainer";
 
 const createSchema = z.object({
   client_id: z.string().uuid(),
