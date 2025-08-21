@@ -10,12 +10,20 @@ export default function SignOutButton() {
 
   const handleSignOut = async () => {
     setLoading(true);
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-      router.refresh();
-      router.push("/signin");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (!error) {
+        // Clear any client-side state
+        router.refresh();
+        router.replace("/signin");
+      } else {
+        console.error("Sign out error:", error);
+      }
+    } catch (error) {
+      console.error("Unexpected sign out error:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

@@ -3,17 +3,17 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../src/lib/supabase'
-import { getCurrentSessionClient } from '../lib/getSession'
+import { supabase } from '@/src/lib/supabase'
+import type { Session } from '@supabase/supabase-js'
 
 export default function Header() {
-  const [session, setSession] = useState<any>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
     const checkSession = async () => {
-      const session = await getCurrentSessionClient()
+      const { data: { session } } = await supabase.auth.getSession()
       setSession(session)
       setLoading(false)
     }
