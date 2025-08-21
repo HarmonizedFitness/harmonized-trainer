@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '../../src/lib/supabase'
 
 export default function TestPage() {
@@ -14,15 +14,19 @@ export default function TestPage() {
     setResult('')
 
     try {
-      const { data, error } = await supabase
-        .from('pg_tables')
-        .select('schemaname')
+      // Try to query the trainers table with a limit of 1
+      // This is a simple health check to verify database connectivity
+      const { data, error, count } = await supabase
+        .from('trainers')
+        .select('id', { count: 'exact', head: true })
         .limit(1)
 
       if (error) {
-        setError(`Error: ${error.message}`)
+        // If the table doesn't exist or there's a connection issue
+        setError(`Database connection error: ${error.message}`)
       } else {
-        setResult(`Success! Data: ${JSON.stringify(data)}`)
+        // Connection successful
+        setResult(`✅ Supabase connection successful! Database is accessible.`)
       }
     } catch (err) {
       setError(`Unexpected error: ${err}`)
@@ -58,8 +62,8 @@ export default function TestPage() {
           )}
 
           <div className="mt-6 text-sm text-gray-600">
-            <p>This page tests the Supabase connection by querying the pg_tables view.</p>
-            <p>If successful, it means your environment variables are correctly configured.</p>
+            <p>This page tests the Supabase connection by performing a simple query against the trainers table.</p>
+            <p>If successful, it confirms that your environment variables are correctly configured and the database is accessible.</p>
           </div>
         </div>
       </div>
